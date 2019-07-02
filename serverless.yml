@@ -16,7 +16,7 @@ custom:
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: dev
+  stage: prod
   region: us-east-1
   # To load environment variables externally
   # rename env.example to env.yml and uncomment
@@ -25,17 +25,17 @@ provider:
   #
   #environment: ${file(env.yml):${self:provider.stage}}
 
-iamRoleStatements:
-  - Effect: Allow
-    Action:
-      - dynamodb:DescribeTable
-      - dynamodb:Query
-      - dynamodb:Scan
-      - dynamodb:GetItem
-      - dynamodb:PutItem
-      - dynamodb:UdateItem
-      - dynamodb:DeleteItem
-    Resource: "arn:aws:dynamodb:us-east-1:*:*"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:us-east-1:*:*"
 
 functions:
   create:
@@ -78,5 +78,8 @@ functions:
           method: delete
           cors: true
           authorizer: aws_iam
+# Create our resources with separate CloudFormation templates
 resources:
+  # API Gateway Errors
   - ${file(resources/api-gateway-errors.yml)}
+
